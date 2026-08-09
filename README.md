@@ -56,8 +56,9 @@ conda activate environment_nlp
 
 ### 2. Abhängigkeiten installieren
 
-bash
+```bash
 conda install -c conda-forge spacy pandas scikit-learn matplotlib seaborn streamlit tqdm -y
+```
 
 #### Englisches spaCy-Sprachmodell installieren
 ```bash
@@ -95,9 +96,9 @@ streamlit run app.py
 
 ## Model Evaluation & Metrics
 
-Das kalibrierte LinearSVC-Modell erzielt eine Genauigkeit von **~85,5 %** über die vier Hauptkategorien. Die Performance zeichnet sich durch hohe Präzision und ausgewogene F1-Scores aus:
+Das kalibrierte LinearSVC-Modell erzielt eine Genauigkeit von **~85,5 %** über die vier Hauptkategorien.
 
-BENCHMARK RESULTS:
+Results:
 - Linear SVC (Calibrated): Accuracy = 0.8549
 - Multinomial Naive Bayes: Accuracy = 0.7405
 
@@ -113,6 +114,6 @@ BENCHMARK RESULTS:
 | **Macro Avg** | 0.83 | 0.81 | 0.82 | 5,071 |
 | **Weighted Avg** | 0.85 | 0.85 | 0.85 | 5,071 |
 
-Nach jedem Durchlauf wird automatisch eine detaillierte **Konfusionsmatrix** unter `models/confusion_matrix.png` gespeichert:
+Nach jedem Durchlauf wird automatisch eine **Konfusionsmatrix** unter `models/confusion_matrix.png` gespeichert:
 
 ![Confusion Matrix](models/confusion_matrix.png)
