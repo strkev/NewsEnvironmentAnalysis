@@ -49,9 +49,10 @@ ML_Environment/
 git clone https://github.com/your-username/ML_Environment.git
 cd ML_Environment
 
-bash
+```bash
 conda create -n environment_nlp python=3.10 -y
 conda activate environment_nlp
+```
 
 ### 2. Abhängigkeiten installieren
 
@@ -59,9 +60,9 @@ bash
 conda install -c conda-forge spacy pandas scikit-learn matplotlib seaborn streamlit tqdm -y
 
 #### Englisches spaCy-Sprachmodell installieren
-bash
+```bash
 pip install https://github.com/explosion/spacy-models/releases/download/en_core_web_sm-3.7.1/en_core_web_sm-3.7.1-py3-none-any.whl
-
+```
 
 ### 3. Datensatz herunterladen
 
@@ -74,21 +75,23 @@ Lade `guardian_environment_news.csv` von [Kaggle](https://www.kaggle.com/dataset
 
 Führe das gesamte Training inklusive Weak Supervision, Feature Extraction, Model Benchmarking und Fehleranalyse aus:
 
-bash
+```bash
 python main.py
+```
 
 Um rechenintensive Schritte (z. B. Weak Supervision & Lemmatisierung) bei wiederholten Durchläufen zu überspringen, nutze den Cache-Flag:
 
-bash
+```bash
 python main.py --skip-preprocessing
+```
 
 ### 2. Interaktive Streamlit Web App starten
 
 Nutze die grafische Benutzeroberfläche, um eigene Texte in Echtzeit zu klassifizieren und den Schwellenwert für unsichere Vorhersagen anzupassen:
 
-bash
+```bash
 streamlit run app.py
-
+```
 
 ## Model Evaluation & Metrics
 
