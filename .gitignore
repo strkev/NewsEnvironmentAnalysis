@@ -9,7 +9,7 @@ ENV/
 data/*.csv
 data/processed/
 models/*.joblib
-models/*.png
+!models/confusion_matrix.png
 
 .vscode/
 .idea/
