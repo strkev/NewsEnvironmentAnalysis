@@ -1,4 +1,4 @@
-# Guardian Environment News Classifier
+# Environment News Classifier
 
 Ein Machine Learning System zur automatischen Klassifikation von Umwelt- und Klimanachrichten auf basis der der Zeitung *The Guardian*. Das Projekt nutzt **Weak Supervision** zur Label-Generierung, **NLP-Preprocessing mit spaCy** (Lemmatisierung & sublineares TF-IDF) sowie einen **kalibrierten Linear Support Vector Classifier (LinearSVC)** zur Vorhersage.
 
