@@ -113,12 +113,3 @@ BENCHMARK RESULTS:
 Nach jedem Durchlauf wird automatisch eine detaillierte **Konfusionsmatrix** unter `models/confusion_matrix.png` gespeichert:
 
 ![Confusion Matrix](models/confusion_matrix.png)
-
-
-
-## Key Takeaways & Learned Concepts
-
-* **Weak Supervision:** Ermöglicht den Verzicht auf manuell gelabelte Daten durch regelbasierte Heuristiken, die als Trainingsbasis für überwachte ML-Modelle dienen.
-* **Probability Calibration (`CalibratedClassifierCV`):** Macht Roh-Decision-Scores von Support Vector Machines über Platt Scaling / Isotonic Regression als verlässliche Wahrscheinlichkeiten nutzbar.
-* **Uncertainty Rejection:** Reduziert Falschklassifikationen bei spekulativen oder fachfremden Texten durch Definition eines Konfidenz-Schwellenwerts (Default: 45%).
-* **Feature Weight Scaling:** Einsatz von 1 + log(TF) (Sublinear Scaling) verhindert, dass übermäßig lange Texte das Modell verzerren.
