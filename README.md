@@ -110,7 +110,10 @@ BENCHMARK RESULTS:
 | **Macro Avg** | 0.83 | 0.81 | 0.82 | 5,071 |
 | **Weighted Avg** | 0.85 | 0.85 | 0.85 | 5,071 |
 
-Nach jedem Durchlauf wird automatisch eine detaillierte **Konfusionsmatrix** unter `models/confusion_matrix.png` gespeichert.
+Nach jedem Durchlauf wird automatisch eine detaillierte **Konfusionsmatrix** unter `models/confusion_matrix.png` gespeichert:
+
+![Confusion Matrix](models/confusion_matrix.png)
+
 
 
 ## Key Takeaways & Learned Concepts

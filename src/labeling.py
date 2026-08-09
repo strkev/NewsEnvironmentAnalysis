@@ -1,5 +1,24 @@
+import spacy
+import multiprocessing as mp
+from tqdm import tqdm
 import pandas as pd
 from src.config import CATEGORIES
+
+nlp = spacy.load("en_core_web_sm", disable=["parser", "ner"])
+
+def lemmatize_texts(texts, desc="Lemmatisiere Texte"):
+    cleaned_texts = []
+    num_cpus = max(1, mp.cpu_count() - 1)
+
+    for doc in tqdm(
+        nlp.pipe(texts, batch_size=256, n_process=num_cpus),
+        total=len(texts),
+        desc=desc
+    ):
+        tokens = [token.lemma_.lower() for token in doc if not token.is_stop and token.is_alpha]
+        cleaned_texts.append(" ".join(tokens))
+
+    return cleaned_texts
 
 def assign_weak_label(text: str) -> str:
     if not isinstance(text, str) or len(text) < 20:
@@ -23,9 +42,13 @@ def apply_weak_supervision(df: pd.DataFrame) -> pd.DataFrame:
     print("Weak Supervision ...")
     df = df.copy()
     df["target_category"] = df["full_text"].apply(assign_weak_label)
-    
+
     df_labeled = df[df["target_category"] != "Unlabeled"].copy()
-    
+
     print("\nGenerated Labels:")
     print(df_labeled["target_category"].value_counts())
+
+    print("\nLammatizing and caching of data...")
+    df_labeled["lemmatized_text"] = lemmatize_texts(df_labeled["full_text"], desc="Pre-Lemmatization")
+
     return df_labeled

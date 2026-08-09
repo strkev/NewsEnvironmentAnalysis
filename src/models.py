@@ -1,10 +1,8 @@
 import os
-import multiprocessing as mp
 from typing import Dict, Tuple
 import pandas as pd
-import spacy
-from tqdm import tqdm
 from sklearn.feature_extraction.text import TfidfVectorizer
+
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import accuracy_score, classification_report
 from sklearn.svm import LinearSVC
@@ -14,34 +12,24 @@ from sklearn.naive_bayes import MultinomialNB
 from src.config import MODEL_DIR, TEST_SIZE, RANDOM_STATE, MAX_FEATURES
 from src.utils import save_artifact
 
-nlp = spacy.load("en_core_web_sm", disable=["parser", "ner"])
-
-def lemmatize_texts(texts, desc="Lemmatisiere"):
-    cleaned_texts = []
-    num_cpus = max(1, mp.cpu_count() - 1)
-
-    for doc in tqdm(
-        nlp.pipe(texts, batch_size=256, n_process=num_cpus), 
-        total=len(texts), 
-        desc=desc
-    ):
-        tokens = [token.lemma_.lower() for token in doc if not token.is_stop and token.is_alpha]
-        cleaned_texts.append(" ".join(tokens))
-        
-    return cleaned_texts
+from src.labeling import lemmatize_texts
 
 def prepare_features(df: pd.DataFrame) -> Tuple[TfidfVectorizer, any, any, any, any, any, any]:
-    X_train_raw, X_test_raw, y_train, y_test = train_test_split(
-        df["full_text"],
+    if "lemmatized_text" not in df.columns:
+        print("'lemmatized_text' not found in DataFrame. Lammatize ...")
+        df = df.copy()
+        df["lemmatized_text"] = lemmatize_texts(df["full_text"], desc="lemmatized text")
+
+    X_train_lem, X_test_lem, y_train, y_test, X_train_raw, X_test_raw = train_test_split(
+        df["lemmatized_text"].fillna(""),
         df["target_category"],
+        df["full_text"],
         test_size=TEST_SIZE,
         random_state=RANDOM_STATE,
         stratify=df["target_category"]
     )
 
-    print("Lemmatisierende Texte in Batches (Parallelized)...")
-    X_train_clean = lemmatize_texts(X_train_raw, desc="Trainingsdaten lemmatisieren")
-    X_test_clean = lemmatize_texts(X_test_raw, desc="Testdaten lemmatisieren")
+    print("using cached lemmatized text for TF-IDF...")
 
     tfidf = TfidfVectorizer(
         max_features=MAX_FEATURES,
@@ -49,12 +37,13 @@ def prepare_features(df: pd.DataFrame) -> Tuple[TfidfVectorizer, any, any, any, 
         ngram_range=(1, 2)
     )
 
-    X_train_vec = tfidf.fit_transform(X_train_clean)
-    X_test_vec = tfidf.transform(X_test_clean)
+    X_train_vec = tfidf.fit_transform(X_train_lem)
+    X_test_vec = tfidf.transform(X_test_lem)
 
     save_artifact(tfidf, os.path.join(MODEL_DIR, "tfidf_vectorizer.joblib"))
 
     return tfidf, X_train_vec, X_test_vec, y_train, y_test, X_test_raw, y_test
+
 
 def run_benchmark_and_save(X_train_vec, X_test_vec, y_train, y_test) -> Tuple[Dict[str, any], any]:
     base_svc = LinearSVC(random_state=RANDOM_STATE)
